@@ -2,7 +2,7 @@
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#070b12"><title>РПЛ Arena — матч-центр и статистика 2026/27</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>:root{
   --bg:#070b12;--bg2:#0b111c;--surface:#111827;--surface2:#162033;--surface3:#1c2840;
   --line:#22304a;--line2:#2c3c5a;--text:#eef2f9;--muted:#8a97ad;--faint:#5d6a82;
@@ -10,7 +10,7 @@
   --win:#3ddc84;--draw:#f5c344;--loss:#ff5d73;--blue:#5aa9ff;
   --radius:18px;--radius-sm:12px;--shadow:0 20px 50px -20px #000a;
   --font:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --display:'Unbounded','Manrope',system-ui,sans-serif;
+  --display:'Manrope',system-ui,sans-serif;
 }
 :root[data-theme="light"]{
   --bg:#f3f5f9;--bg2:#e9edf4;--surface:#ffffff;--surface2:#f5f7fb;--surface3:#edf1f7;
@@ -85,8 +85,8 @@ h3{font-size:15px;margin:0}
 .section{margin-top:22px}
 
 /* ---------- crest / avatar ---------- */
-.crest{width:28px;height:28px;flex:none;display:inline-grid;place-items:center}
-.crest img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px #0006)}
+.crest{width:28px;height:28px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;contain:layout paint;vertical-align:middle;min-width:0;min-height:0}
+.crest img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;min-width:0;min-height:0;object-fit:contain;object-position:center;flex:0 0 100%}
 .crest.sm{width:22px;height:22px}.crest.lg{width:56px;height:56px}.crest.xl{width:110px;height:110px}.crest.xxl{width:150px;height:150px}
 .crest .ini{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:10px;color:#fff;background:var(--c,#334)}
 .ava{width:40px;height:40px;border-radius:50%;flex:none;overflow:hidden;background:linear-gradient(160deg,var(--surface3),var(--surface2));border:1px solid var(--line2);display:grid;place-items:center;position:relative}
@@ -95,7 +95,7 @@ h3{font-size:15px;margin:0}
 .ava.sm{width:32px;height:32px}.ava.md{width:52px;height:52px}.ava.lg{width:72px;height:72px}
 .ava.xl{width:168px;height:168px;border-width:3px}
 .teamlink{display:inline-flex;align-items:center;gap:9px;min-width:0;font-weight:700}
-.teamlink span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.teamlink>span:not(.crest){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .teamlink:hover span{color:var(--accent)}
 
 /* ---------- match rows ---------- */
@@ -328,7 +328,7 @@ td.player-cell{min-width:220px}
 .toast.show{opacity:1;transform:translateX(-50%)}
 .hbar{display:grid;grid-template-columns:150px minmax(0,1fr) 60px;gap:12px;align-items:center;padding:7px 0}
 .hbar .t{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;min-width:0}
-.hbar .t span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .t>span:not(.crest){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hbar .b{height:10px;border-radius:10px;background:var(--surface3);overflow:hidden}
 .hbar .b i{display:block;height:100%;border-radius:10px;background:var(--c,var(--accent))}
 .hbar b{text-align:right;font-variant-numeric:tabular-nums}
@@ -384,6 +384,85 @@ td.player-cell{min-width:220px}
 }
 
 .res-pill{display:inline-grid;place-items:center;min-width:42px;height:24px;border-radius:7px;font-weight:900;font-size:12.5px;color:#08110a}.res-pill.W{background:var(--win)}.res-pill.D{background:var(--draw)}.res-pill.L{background:var(--loss)}
+
+/* Arena / editorial design system. Fixed crest boxes above are shared by all views. */
+:root{--radius:8px;--radius-sm:5px;--shadow:none}
+body{background-image:none;letter-spacing:.01em}
+.wrap{max-width:1440px;padding-inline:32px}
+main.wrap{padding-top:32px;padding-bottom:80px}
+.top{background:var(--bg);backdrop-filter:none}
+.top .wrap{height:80px;gap:24px}
+.brand-mark{border-radius:3px;box-shadow:none;width:34px;height:42px}
+.brand b{font-size:17px;font-weight:800;letter-spacing:-.5px}
+.brand small{font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.nav{gap:18px}.nav a{border-radius:0;padding:28px 0 25px;border-bottom:3px solid transparent;font-size:13px}
+.nav a.on{background:none;border-bottom-color:var(--accent)}.nav a:hover{background:none}
+.search input,.icon-btn,input.inp,select.sel{border-radius:5px}
+.search input{width:190px}.search input:focus{width:210px}
+h1{font-weight:800;letter-spacing:-1.4px;font-size:clamp(32px,4.4vw,60px);line-height:1.1}
+h2{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.page-head{margin:6px 0 28px}.eyebrow{font-size:10px;letter-spacing:1.8px}
+.sub{font-size:14px}.section{margin-top:28px}.grid{gap:24px}.g-main{align-items:start}
+.card{border-radius:6px;background:var(--bg2)}
+.card-h{padding:19px 20px;background:transparent}
+.card-h a.more{font-size:12px}.card-b{padding:20px}
+.hero{padding:0;border:0;border-radius:0;background:none;box-shadow:none;min-height:0}
+.hero::after{display:none}.hero-top{padding:8px 0 28px;align-items:flex-end}
+.hero h1{font-size:clamp(56px,8vw,104px);letter-spacing:-4px;color:var(--text)}
+.hero .sub{color:var(--muted)}.hero-stats{gap:0}.hs{background:none;border:0;border-left:1px solid var(--line2);border-radius:0;padding:4px 24px;color:var(--text);min-width:120px}
+.hs b{font-size:32px;font-weight:800;letter-spacing:-1px}.hs small{color:var(--muted);font-size:11px}
+.feature{margin:0;gap:0;border-block:1px solid var(--line2);background:var(--bg2)}
+.fm{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:18px 20px;background:none;color:var(--text);gap:12px}
+.fm:hover{transform:none;background:var(--surface2)}.fm small{color:var(--muted)}.fm .row b{font-size:18px}.fm .row{gap:12px}
+:root[data-theme="light"] .hero{background:none;color:var(--text)}
+.mrow{padding-block:16px}.score{background:none;border-radius:3px;font-size:19px;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.dayhead{background:var(--bg);font-size:10px;letter-spacing:1px;padding-block:13px}
+.chip,.seg,.seg button,.tag,.pos,.form i,.rating,.res-pill{border-radius:4px}
+.chip{height:42px}.chips{margin-bottom:12px}.tabs button{font-weight:700}
+.tbl td{padding-block:14px}.tbl th{color:var(--muted);background:var(--bg2)}
+.tbl tbody tr:has(.pos.z1){background:var(--accent-soft)}
+.tbl tbody tr:hover{background:var(--surface2)}
+.leader-card .lead-top{background:var(--surface);padding:20px 16px;gap:10px;flex-wrap:wrap;min-height:132px;align-content:center}
+.lead-top .big{font-size:32px}.lead-top .ava.lg{width:48px;height:48px}.lead-top>div{flex:1;min-width:100px!important}
+.lead-row{padding:12px 16px}.lead-row .v{font-size:17px}
+.club-grid{gap:16px}.club-card{padding:24px;min-height:270px;border-radius:6px;border-top:3px solid var(--c);background:var(--bg2)}
+.club-card::before{display:none}.club-card:hover{transform:none;background:var(--surface)}
+.club-card .crest{margin:6px auto 24px}.club-card h3{font-size:18px;font-weight:800;letter-spacing:-.4px}
+.club-card .cfoot{border-top:1px solid var(--line);margin-top:20px}.club-card .cfoot b{font-size:20px}
+.club-hero,.p-hero,.m-hero{border-radius:6px;box-shadow:none}.club-hero::after{display:none}
+.club-hero{border-left:5px solid var(--c);background:color-mix(in srgb,var(--c) 14%,#0b111c)}
+.p-hero{background:color-mix(in srgb,var(--c) 12%,#0b111c);border-top:3px solid var(--c)}
+.m-hero{background:#0b111c;border-top:3px solid var(--accent);padding-block:32px}
+.club-hero .info{min-width:0}.club-hero .posbox,.kpi,.sq{border-radius:5px}.kpi{background:var(--bg2)}
+.kpi b{font-weight:800;font-size:30px}.ava{background:var(--surface2)}
+.utility{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px;font-size:12px}
+.utility>span{color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.utility-links{display:flex;gap:8px;flex-wrap:wrap}.utility a{padding:8px 12px;border:1px solid var(--line);border-radius:4px;font-weight:700}
+.utility a:hover{border-color:var(--accent)}
+.watch-panel{margin-top:28px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:5px;background:var(--bg2)}
+.watch-panel .card-h{flex-wrap:wrap}.watch-options{display:flex;flex-wrap:wrap;gap:8px;padding:16px 20px}
+.watch-option{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:transparent;font-size:12px;font-weight:700}
+.watch-option[aria-pressed="true"],.favorite-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.watch-panel summary{cursor:pointer;padding:14px 20px;font-size:13px;color:var(--muted)}
+.watch-panel .empty{padding:24px;font-size:14px}.watch-panel .mlist{border-top:1px solid var(--line)}
+.compare-picks{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:24px;margin-bottom:24px}
+.compare-picks label{min-width:0;display:grid;gap:8px;font-size:12px;color:var(--muted)}.compare-picks select{width:100%;min-width:0;color:var(--text)}
+.compare-head,.compare-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,1fr) minmax(0,1fr);align-items:center;text-align:center;gap:16px;padding:18px 24px}
+.compare-head{padding-block:28px}.compare-head>a{display:flex;flex-direction:column;align-items:center;gap:14px;font-size:20px;font-weight:800}
+.compare-row{border-top:1px solid var(--line);font-variant-numeric:tabular-nums}.compare-row>b{font-size:24px}.compare-row>span{font-size:12px;color:var(--muted)}.compare-row .better{color:var(--accent)}.compare-row .form{display:flex;flex-wrap:wrap;justify-content:center}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+button:disabled{cursor:default;opacity:.4}
+@media(min-width:961px) and (max-width:1250px){.top .wrap{gap:16px}.nav{gap:12px}.nav a{font-size:12px}.search input,.search input:focus{width:150px}.brand small{display:none}.top-tools{gap:5px}}
+@media(max-width:960px){.wrap{padding-inline:24px}.hero-top{gap:24px}.hero-stats{width:100%}.hs{flex:1;padding-inline:18px}.hs:first-child{border-left:0;padding-left:0}.feature{grid-template-columns:repeat(2,minmax(0,1fr))}.top .wrap{height:68px}.utility{margin-bottom:18px}}
+@media(max-width:640px){.wrap{padding-inline:16px}main.wrap{padding-top:20px}.top .wrap{gap:8px}.brand b{font-size:12px}.brand-mark{width:28px;height:34px}.brand{gap:8px}.top-tools{gap:4px}.icon-btn{min-width:34px;height:38px;padding:0 8px}.search input{width:38px;height:38px}.search input:focus{position:fixed;left:16px;top:14px;width:calc(100vw - 32px);z-index:2;background:var(--surface)}
+.hero h1{letter-spacing:-2px}.hs b{font-size:26px}.hs{padding:4px 12px;min-width:0}.hs small{font-size:10px}.fm{padding:14px 12px}.fm .row{gap:8px}.fm .row>span:not(.crest){font-size:12px}
+.utility>span{display:none}.utility-links{width:100%}.utility a{flex:1;text-align:center}.club-grid{gap:10px}.club-card{padding:16px 10px;min-height:250px}.club-card h3{font-size:15px}.club-card .city{font-size:11px}.club-card .cfoot{gap:4px;font-size:10px}.club-card .cfoot b{font-size:16px}
+.club-hero{gap:18px}.club-hero .info{flex-basis:calc(100% - 130px)}.club-hero h1{font-size:28px;letter-spacing:-.6px}.club-hero .posbox{width:100%}.club-hero .facts{gap:12px}.club-hero .facts b{font-size:13px}
+.mrow{grid-template-columns:40px minmax(0,1fr) 52px minmax(0,1fr);padding:14px 10px;gap:5px}.mrow .teamlink{gap:5px;font-size:11px}.mrow .teamlink>span:not(.crest){white-space:normal;line-height:1.3;overflow-wrap:anywhere}.mrow .score{min-width:48px;font-size:17px}.mrow .when{font-size:10px}
+.compare-picks{gap:10px}.compare-picks .icon-btn{padding:0 8px}.compare-picks select{font-size:12px;padding:0 6px}.compare-head,.compare-row{padding:16px 12px;gap:8px;grid-template-columns:minmax(0,1fr) 100px minmax(0,1fr)}.compare-head>a{font-size:14px}.compare-row>b{font-size:20px}.watch-options{padding:12px}.watch-option{font-size:11px}.card-h{padding:16px}.card-h h2{font-size:17px}}
+@media(max-width:360px){.brand>span:last-child{display:none}.top-tools{margin-left:auto}.m-main{gap:10px}.m-score{font-size:36px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
 </style></head>
 <body>
 <header class="top"><div class="wrap">
@@ -663,13 +742,15 @@ const routes = [
   [/^#\/players$/, () => pagePlayers()],
   [/^#\/player\/(.+)$/, (id) => pagePlayer(decodeURIComponent(id))],
   [/^#\/stats$/, () => pageStats()],
+  [/^#\/favorites$/, () => pageFavorites()],
+  [/^#\/compare$/, () => pageCompare()],
 ];
 function current() { const h = location.hash || '#/'; for (const [re, fn] of routes) { const m = h.match(re); if (m) return [fn, m.slice(1)]; } return [pageHome, []]; }
 function render(keepScroll) {
   const [fn, args] = current();
   const y = window.scrollY;
   const html = fn(...args);
-  $('#app').innerHTML = html;
+  $('#app').innerHTML = `<div class="utility"><span>Футбол. Цифры. Люди.</span><div class="utility-links"><a href="#/favorites">Мои клубы${favoriteIds().length ? ' · ' + favoriteIds().length : ''}</a><a href="#/compare">Сравнить команды ↗</a></div></div>` + html;
   const sec = (location.hash.match(/^#\/(\w+)/) || [, 'home'])[1];
   const key = { matches: 'matches', match: 'matches', table: 'table', clubs: 'clubs', club: 'clubs', players: 'players', player: 'players', stats: 'stats' }[sec] || 'home';
   document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('on', a.dataset.nav === key));
@@ -727,6 +808,7 @@ function pageHome() {
       <div class="row">${crest(m.a, 'sm')}<span>${esc(teamMap[m.a].name)}</span><b>${m.ag ?? ''}</b></div></a>`).join('')}</div>
   </section>
 
+  ${watchPanel(true)}
   <div class="grid g-main section">
     <div class="card">
       <div class="card-h"><h2>Результаты ${lr}-го тура</h2><a class="more" href="#/matches/${lr}">Все матчи ›</a></div>
@@ -950,7 +1032,7 @@ function pageClub(id) {
     ${crest(t, 'xxl')}
     <div class="info"><div class="eyebrow" style="color:#ffffffb0">${esc(t.city)}</div><h1>${esc(t.name)}</h1>
       <div class="facts"><span><small>Стадион</small><b>${esc(t.stadium)}</b></span><span><small>Главный тренер</small><b>${esc(t.coach)}</b></span><span><small>Игроков в заявке</small><b>${sq.length}</b></span><span><small>Средний возраст</small><b>${(sq.reduce((s, p) => s + (p.age || 0), 0) / Math.max(1, sq.filter(p => p.age).length)).toFixed(1)}</b></span></div>
-      <div style="margin-top:14px">${formChips(r.form)}</div></div>
+      <div style="margin-top:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">${formChips(r.form)}${favoriteButton(id)}</div></div>
     <div class="posbox"><b>${r.pos}</b><small>место · ${r.pts} очк.</small></div>
   </section>
   <div class="kpis section">
@@ -1190,6 +1272,62 @@ function setupApi() {
   $('#themeBtn').onclick = () => { const cur = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'; document.documentElement.dataset.theme = cur; LS.set('rplArena.theme', cur); render(true); };
 }
 function updateFooter() { $('#updated').textContent = S.updated; }
+
+/* ---------------- Personal match feed & team comparison ---------------- */
+function favoriteIds() {
+  const saved = LS.get('rplArena.favorites', []);
+  return Array.isArray(saved) ? [...new Set(saved.filter(id => !!teamMap[id]))] : [];
+}
+function toggleFavorite(id) {
+  if (!teamMap[id]) return;
+  const ids = favoriteIds(), active = ids.includes(id);
+  LS.set('rplArena.favorites', active ? ids.filter(x => x !== id) : [...ids, id]);
+  render(true);
+  document.querySelector(`[data-favorite="${id}"]`)?.focus({preventScroll:true});
+  toast(active ? 'Клуб удалён из избранного' : 'Клуб добавлен в вашу ленту');
+}
+function favoriteButton(id) {
+  const active = favoriteIds().includes(id);
+  return `<button class="icon-btn favorite-btn" data-favorite="${id}" aria-pressed="${active}" onclick="toggleFavorite('${id}')">${active ? '★ В избранном' : '☆ Следить за клубом'}</button>`;
+}
+function watchPanel(compact = false) {
+  const ids = favoriteIds();
+  const mode = S.ui.watchMode || 'next';
+  const list = S.matches.filter(m => (ids.includes(m.h) || ids.includes(m.a)) && (mode === 'results' ? played(m) : !played(m)))
+    .sort((a,b) => (mode === 'results' ? -1 : 1) * (a.d + a.t).localeCompare(b.d + b.t));
+  const shown = compact ? list.slice(0,4) : list;
+  return `<section class="watch-panel" aria-label="Матчи избранных клубов"><div class="card-h"><div><div class="eyebrow">Ваша трибуна</div><h2>Мои клубы</h2></div>
+    <div class="seg">${[['next','Ближайшие'],['results','Результаты']].map(([k,l]) => `<button aria-pressed="${mode===k}" class="${mode===k?'on':''}" onclick="S.ui.watchMode='${k}';render(true)">${l}</button>`).join('')}</div></div>
+    <details ${!compact ? 'open' : ''}><summary>Выбрать клубы · ${ids.length} из ${S.teams.length}</summary><div class="watch-options">${S.teams.map(t => `<button class="watch-option" data-favorite="${t.id}" aria-pressed="${ids.includes(t.id)}" onclick="toggleFavorite('${t.id}')">${crest(t,'sm')}${esc(t.name)}<span aria-hidden="true">${ids.includes(t.id)?'★':'+'}</span></button>`).join('')}</div></details>
+    <div class="mlist">${shown.map(m=>matchRow(m)).join('') || `<div class="empty">${!ids.length ? 'Выберите любимые команды — их матчи появятся здесь.' : mode === 'results' ? 'У выбранных клубов пока нет завершённых матчей.' : 'В загруженном календаре нет предстоящих матчей этих клубов.'}</div>`}</div>
+    ${compact && list.length>4 ? '<div class="card-h"><a class="more" href="#/favorites">Вся лента матчей →</a></div>' : ''}</section>`;
+}
+function pageFavorites() {
+  return `<div class="page-head"><div><div class="eyebrow">Персональная лента</div><h1>Ближе к своим.</h1><p class="sub">Матчи выбранных команд в одном месте. Ваш выбор сохраняется в этом браузере.</p></div></div>${watchPanel()}`;
+}
+function changeComparison(side, id) {
+  if (!teamMap[id]) return;
+  const c = S.ui.compare;
+  const other = side === 'left' ? 'right' : 'left';
+  if (id === c[other]) c[other] = c[side];
+  c[side] = id;
+  render(true);
+  document.getElementById('compare-'+side)?.focus({preventScroll:true});
+}
+function pageCompare() {
+  if (S.teams.length < 2) return '<div class="empty">Для сравнения нужны две команды.</div>';
+  if (!S.ui.compare) S.ui.compare = {left:TABLE.all[0].id,right:TABLE.all[1].id};
+  const c = S.ui.compare, L = TABLE.byId[c.left], R = TABLE.byId[c.right];
+  const pick = (side,label) => `<label for="compare-${side}">${label}<select class="sel" id="compare-${side}" onchange="changeComparison('${side}',this.value)">${S.teams.map(t=>`<option value="${t.id}" ${c[side]===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>`;
+  const metrics = [['Место в таблице','pos',true],['Очки','pts',false],['Матчи','p',null],['Победы','w',false],['Ничьи','d',null],['Поражения','l',true],['Забито','gf',false],['Пропущено','ga',true]];
+  const meetings = S.matches.filter(m => played(m) && ((m.h===c.left && m.a===c.right)||(m.h===c.right && m.a===c.left)));
+  return `<div class="page-head"><div><div class="eyebrow">Две команды · один сезон</div><h1>Лицом к лицу.</h1><p class="sub">Сравнение по завершённым матчам РПЛ 2026/27 из текущей базы.</p></div></div>
+    <div class="compare-picks">${pick('left','Первая команда')}<button class="icon-btn" aria-label="Поменять команды местами" onclick="[S.ui.compare.left,S.ui.compare.right]=[S.ui.compare.right,S.ui.compare.left];render(true)">⇄</button>${pick('right','Вторая команда')}</div>
+    <section class="card" aria-label="Сравнение команд"><div class="compare-head"><a href="#/club/${L.id}">${crest(L.id,'lg')}${esc(teamMap[L.id].name)}</a><span class="eyebrow">2026 / 27</span><a href="#/club/${R.id}">${crest(R.id,'lg')}${esc(teamMap[R.id].name)}</a></div>
+    ${metrics.map(([label,key,inverse])=>{const l=L[key],r=R[key],lb=inverse!==null && l!==r && (inverse?l<r:l>r),rb=inverse!==null && l!==r && !lb;return `<div class="compare-row"><b class="${lb?'better':''}">${l}</b><span>${label}</span><b class="${rb?'better':''}">${r}</b></div>`;}).join('')}
+    <div class="compare-row"><div>${formChips(L.form)}</div><span>Последние 5 матчей</span><div>${formChips(R.form)}</div></div></section>
+    <section class="card section"><div class="card-h"><h2>Очные встречи в сезоне</h2></div>${meetings.map(m=>matchRow(m)).join('') || '<div class="empty">Завершённых очных встреч в текущей базе нет.</div>'}</section>`;
+}
 
 /* ---------------- boot ---------------- */
 document.documentElement.dataset.theme = LS.get('rplArena.theme', 'dark');
