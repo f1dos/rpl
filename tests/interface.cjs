@@ -19,7 +19,7 @@ const assert=require('node:assert/strict');
   assert.equal(result.escaped,0,`crest escape: ${route} at ${width}`);
   assert.equal(result.overflow,false,`page overflow: ${route} at ${width}`);
  }
- for(const width of [1440,1024,768,390,320])for(const route of ['#/','#/clubs','#/club/zen','#/matches/13','#/table','#/compare','#/favorites'])await checkLayout(route,width);
+ for(const width of [1440,1024,768,390,320])for(const route of ['#/','#/clubs','#/club/zen','#/matches/13','#/table','#/compare','#/favorites','#/stats'])await checkLayout(route,width);
  await page.setViewportSize({width:1440,height:1000});
  await page.evaluate(()=>location.hash='#/favorites');await page.waitForTimeout(100);
  await page.locator('[data-favorite="zen"]').click();
@@ -40,10 +40,11 @@ const assert=require('node:assert/strict');
  const mid=await page.evaluate(()=>S.matches.find(m=>played(m)).id);
  await checkLayout('#/match/'+mid,390);
  for(const tab of ['Статистика','Составы','Форма и история']){await page.getByRole('button',{name:tab,exact:true}).click();assert.ok(await page.locator('#app').innerText());}
+ for(const width of [320,390,768,1440]) { await page.evaluate(()=>{S.ui.matchTab='stats';render()}); await checkLayout('#/match/'+mid,width); }
  const pid=await page.evaluate(()=>S.players[0].id);await checkLayout('#/player/'+pid,390);
  await page.click('#themeBtn');await checkLayout('#/clubs',390);
  await page.click('#themeBtn');await checkLayout('#/',1440);
  await page.screenshot({path:'/tmp/rpl-desktop.png',fullPage:true});
  await checkLayout('#/',390);await page.screenshot({path:'/tmp/rpl-mobile.png',fullPage:true});
- assert.deepEqual(errors,[]);await browser.close();console.log('PASS: 35 route/viewport checks, crest bounds, favorites persistence/filtering, comparison, match tabs, player view and theme.');
+ assert.deepEqual(errors,[]);await browser.close();console.log('PASS: 40 route/viewport checks and match statistics at 4 widths, crest bounds, favorites persistence/filtering, comparison, match tabs, player view and theme.');
 })().catch(e=>{console.error(e);process.exit(1)});

@@ -463,6 +463,61 @@ button:disabled{cursor:default;opacity:.4}
 @media(max-width:360px){.brand>span:last-child{display:none}.top-tools{margin-left:auto}.m-main{gap:10px}.m-score{font-size:36px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 
+
+/* Quiet, shared statistics: aligned numbers, fine rules, one restrained accent. */
+.club-hero{isolation:isolate}
+.club-hero::after{display:block;z-index:0;right:24px;top:50%;width:320px;max-width:42%;height:calc(100% - 24px);opacity:.12;transform:translateY(-50%) rotate(-12deg);background-size:contain;pointer-events:none}
+.club-hero>*{position:relative;z-index:1}
+.kpis{gap:0;border-block:1px solid var(--line);padding:18px 0}
+.kpi{border:0;border-right:1px solid var(--line);border-radius:0;background:none;padding:2px 20px}
+.kpi:last-child{border-right:0}.kpi small{font-size:12px;font-weight:500}
+.kpi b{font-size:26px;font-weight:700;letter-spacing:-.5px;margin:8px 0 4px;font-variant-numeric:tabular-nums}
+.kpi em{font-size:11px;color:var(--muted);font-weight:400}
+.leader-card,[data-view="stats"] .card,.match-statistics .card{border:0;border-radius:0;background:transparent;overflow:visible;box-shadow:none}
+.leader-card .card-h,[data-view="stats"] .card-h,.match-statistics .card-h{padding:16px 0;border-bottom:1px solid var(--line2);align-items:center;min-height:58px}
+.leader-card .card-h h2,[data-view="stats"] .card-h h2,.match-statistics .card-h h2{font-size:14px;line-height:1.5;font-weight:600;letter-spacing:0}
+.leader-card .lead-row,[data-view="stats"] .lead-row{padding:13px 0;gap:12px;border-color:var(--line)}
+.leader-card .lead-row .nm b,[data-view="stats"] .lead-row .nm b{font-size:13px;font-weight:500}
+.leader-card .lead-row .nm small,[data-view="stats"] .lead-row .nm small{font-size:11px}
+.leader-card .lead-row .rk,[data-view="stats"] .lead-row .rk{font-size:11px;font-weight:400;color:var(--muted);flex:none}
+.leader-card .lead-row .v,[data-view="stats"] .lead-row .v{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.leader-card .lead-row:first-of-type .v,[data-view="stats"] .lead-row:first-of-type .v{color:var(--accent)}
+.leader-card .ava,[data-view="stats"] .lead-row .ava{width:28px;height:28px;border:0}
+[data-view="stats"] .grid{gap:32px 40px;align-items:start}
+[data-view="stats"] .card-b,.match-statistics .card-b{padding:8px 0}
+[data-view="stats"] .hbar{grid-template-columns:minmax(0,1fr) minmax(40px,.65fr) 48px;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
+[data-view="stats"] .hbar:last-child{border-bottom:0}
+[data-view="stats"] .hbar .t{font-size:12px;font-weight:500;gap:10px}
+[data-view="stats"] .hbar .b{height:2px;border-radius:0;background:var(--line)}
+[data-view="stats"] .hbar .b i{border-radius:0;background:var(--muted)}
+[data-view="stats"] .hbar b{font-size:14px;font-weight:600}
+[data-view="stats"] .hbar:hover{background:var(--surface2)}
+.match-statistics{gap:28px 56px;align-items:start}
+.statrow{padding:15px 0;border-bottom:1px solid var(--line)}
+.statrow:last-child{border-bottom:0}
+.statrow .lbl{display:grid;grid-template-columns:84px minmax(0,1fr) 84px;align-items:center;gap:12px;margin-bottom:10px;font-variant-numeric:tabular-nums}
+.statrow .lbl b{font-size:16px;font-weight:500}
+.statrow .lbl b:last-child{text-align:right}.statrow .lbl b{overflow-wrap:anywhere}.stat-detail{display:block;color:var(--muted);font-size:10px;font-weight:400;line-height:1.5;margin-top:3px}
+.statrow .lbl span{text-align:center;font-size:12px;font-weight:400;line-height:1.4}
+.statrow .lbl .better{color:var(--text);font-weight:700}
+.statrow .bars{gap:3px}
+.statrow .bars div{height:2px;border-radius:0;background:var(--line)}
+.statrow .bars i{border-radius:0;background:var(--muted)!important}
+.statrow:has(.lbl>b:first-child.better) .bars>div:first-child i,
+.statrow:has(.lbl>b:last-child.better) .bars>div:last-child i{background:var(--accent)!important}
+.pct .bar,.hbar .b{height:3px;border-radius:0}.pct .bar i{border-radius:0;background:var(--accent)}
+.pct span{font-weight:500}.pct b{font-weight:600}
+.compare-row>b{font-size:21px;font-weight:600}
+.tabs{overflow-y:hidden}
+@media(max-width:640px){
+ .club-hero::after{right:8px;max-width:55%;opacity:.09}
+ .kpis{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:20px;padding:18px 0}
+ .kpi{padding:0 14px}.kpi:nth-child(2n){border-right:0}.kpi b{font-size:23px}
+ [data-view="stats"] .grid{gap:24px}.match-statistics{grid-template-columns:1fr;gap:16px}
+ .statrow .lbl{grid-template-columns:64px minmax(0,1fr) 64px;gap:8px}
+ [data-view="stats"] .hbar{gap:10px;grid-template-columns:minmax(0,1fr) 60px 44px}
+}
+
 </style></head>
 <body>
 <header class="top"><div class="wrap">
@@ -752,6 +807,7 @@ function render(keepScroll) {
   const html = fn(...args);
   $('#app').innerHTML = `<div class="utility"><span>Футбол. Цифры. Люди.</span><div class="utility-links"><a href="#/favorites">Мои клубы${favoriteIds().length ? ' · ' + favoriteIds().length : ''}</a><a href="#/compare">Сравнить команды ↗</a></div></div>` + html;
   const sec = (location.hash.match(/^#\/(\w+)/) || [, 'home'])[1];
+  $('#app').dataset.view = sec;
   const key = { matches: 'matches', match: 'matches', table: 'table', clubs: 'clubs', club: 'clubs', players: 'players', player: 'players', stats: 'stats' }[sec] || 'home';
   document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('on', a.dataset.nav === key));
   window.scrollTo(0, keepScroll ? y : 0);
@@ -763,11 +819,10 @@ window.addEventListener('hashchange', () => render(false));
 
 /* ---------------- HOME ---------------- */
 function leaderCard(title, list, val, sub) {
-  const p0 = list[0]; if (!p0) return '';
-  return `<div class="card leader-card">
-    <a class="lead-top" href="${pHref(p0)}">${ava(p0, 'lg')}<div style="min-width:0"><div class="eyebrow">${title}</div><b style="display:block;font-size:16px;margin-top:3px">${esc(p0.n)}</b><small class="muted">${esc(teamMap[p0.t].name)}</small></div><span class="big">${val(p0)}</span></a>
-    ${list.slice(1, 5).map((p, i) => `<a class="lead-row" href="${pHref(p)}"><span class="rk">${i + 2}</span>${ava(p, 'sm')}<span class="nm"><b>${esc(p.n)}</b><small>${esc(teamMap[p.t].name)}${sub ? ' · ' + sub(p) : ''}</small></span><span class="v">${val(p)}</span></a>`).join('')}
-  </div>`;
+  if (!list.length) return '';
+  return `<section class="card leader-card"><div class="card-h"><h2>${title}</h2></div>
+    ${list.slice(0, 5).map((p, i) => `<a class="lead-row" href="${pHref(p)}"><span class="rk">${i + 1}</span>${ava(p, 'sm')}<span class="nm"><b>${esc(p.n)}</b><small>${esc(teamMap[p.t].name)}${sub ? ' · ' + sub(p) : ''}</small></span><span class="v">${val(p)}</span></a>`).join('')}
+  </section>`;
 }
 function roundBest(round) {
   const ids = new Set(S.matches.filter(m => m.r === round && played(m)).map(m => m.id));
@@ -932,18 +987,19 @@ function matchOverview(m, d) {
 }
 const infoLine = (k, v) => v ? `<div style="display:flex;justify-content:space-between;gap:12px"><span class="muted">${k}</span><b style="text-align:right">${esc(v)}</b></div>` : '';
 function statRow(r, m) {
+  const value = v => { const parts = String(v).match(/^(.+?)\s*(\([^)]*\))$/); return parts ? `${esc(parts[1])}<small class="stat-detail">${esc(parts[2])}</small>` : esc(v); };
   const [, name, h, a] = r; const hv = parseFloat(h), av = parseFloat(a);
   const tot = (hv || 0) + (av || 0);
   const hp = tot ? hv / tot * 100 : 50, ap = tot ? av / tot * 100 : 50;
   const lowerBetter = /Фолы|карточ|Офсайд|Ошибки/i.test(name);
   const hb = lowerBetter ? hv < av : hv > av, ab = lowerBetter ? av < hv : av > hv;
-  return `<div class="statrow"><div class="lbl"><b class="${hb ? 'better' : ''}">${esc(h)}</b><span>${esc(name)}</span><b class="${ab ? 'better' : ''}">${esc(a)}</b></div>
+  return `<div class="statrow"><div class="lbl"><b class="${hb ? 'better' : ''}">${value(h)}</b><span>${esc(name)}</span><b class="${ab ? 'better' : ''}">${value(a)}</b></div>
   <div class="bars"><div><i style="width:${hp}%;background:${teamMap[m.h].color}"></i></div><div><i style="width:${ap}%;background:${teamMap[m.a].color}"></i></div></div></div>`;
 }
 function matchStats(m, d) {
   if (!d) return '';
   const groups = d.g.map((g, i) => [g, d.st.filter(x => x[0] === i)]).filter(x => x[1].length && x[0] !== 'Главное');
-  return `<div class="grid g2">${groups.map(([g, rows]) => `<div class="card"><div class="card-h"><h2>${esc(g)}</h2><span style="display:flex;gap:8px">${crest(m.h, 'sm')}${crest(m.a, 'sm')}</span></div><div class="card-b">${rows.map(r => statRow(r, m)).join('')}</div></div>`).join('')}</div>`;
+  return `<div class="grid g2 match-statistics">${groups.map(([g, rows]) => `<div class="card"><div class="card-h"><h2>${esc(g)}</h2><span style="display:flex;gap:8px">${crest(m.h, 'sm')}${crest(m.a, 'sm')}</span></div><div class="card-b">${rows.map(r => statRow(r, m)).join('')}</div></div>`).join('')}</div>`;
 }
 function pitchSvg(single) {
   return `<svg class="pitch-lines" viewBox="0 0 68 105" preserveAspectRatio="none"><g fill="none" stroke="#ffffff40" stroke-width=".35">
