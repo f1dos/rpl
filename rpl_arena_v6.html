@@ -564,7 +564,11 @@ const LS = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
-const API_DEFAULT = 'http://localhost:8765';
+// Страница открыта с сервера (http/https) — данные берём оттуда же. Открыта файлом (file://) — ищем прокси на localhost:8765.
+// HOSTED — размещённый сайт (не localhost): адрес API пользователь не настраивает.
+const SERVED = /^https?:$/.test(location.protocol);
+const HOSTED = SERVED && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+const API_DEFAULT = SERVED ? location.origin : 'http://localhost:8765';
 const FS_IMG = 'https://static.flashscore.com/res/image/data/';
 const POS = { GK: 'Вратарь', DF: 'Защитник', MF: 'Полузащитник', FW: 'Нападающий' };
 const POS_PL = { GK: 'Вратари', DF: 'Защитники', MF: 'Полузащитники', FW: 'Нападающие' };
@@ -573,7 +577,7 @@ const POS_SHORT = { GK: 'ВР', DF: 'ЗЩ', MF: 'ПЗ', FW: 'НП' };
 /* ---------------- state ---------------- */
 const S = {
   teams: RAW.teams, matches: RAW.matches, details: RAW.details, players: RAW.players,
-  updated: RAW.updated, api: LS.get('rplArena.api', API_DEFAULT), apiOk: null,
+  updated: RAW.updated, api: HOSTED ? API_DEFAULT : LS.get('rplArena.api', API_DEFAULT), apiOk: null,
   ui: { round: null, tableMode: 'all', pl: { team: '', pos: '', q: '', sort: 'g', dir: -1, scope: 'lg', page: 0 }, matchTab: 'overview', clubTab: 'squad' }
 };
 let teamMap = {}, playerMap = {}, matchMap = {}, TABLE = {}, LOGS = {}, TAGG = {}, DERIVED = {};
@@ -1262,10 +1266,19 @@ function setupSearch() {
 
 /* ---------------- Flashscore proxy API ---------------- */
 function toast(msg, ms = 2800) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), ms); }
-async function api(path, timeout = 25000) {
-  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), timeout);
-  try { const r = await fetch(S.api.replace(/\/$/, '') + path, { signal: ctl.signal, cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
-  finally { clearTimeout(tm); }
+// Один повтор при сетевой ошибке, таймауте и 5xx (4xx — осмысленный отказ, повторять незачем).
+async function api(path, timeout = 25000, retries = 1) {
+  for (let i = 0; ; i++) {
+    const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), timeout);
+    try {
+      const r = await fetch(S.api.replace(/\/$/, '') + path, { signal: ctl.signal, cache: 'no-store' });
+      if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return await r.json();
+    } catch (e) {
+      if (i >= retries || (e.status && e.status < 500)) throw e;
+      await new Promise(res => setTimeout(res, 800 * (i + 1)));
+    } finally { clearTimeout(tm); }
+  }
 }
 function setApiState(ok, text) {
   S.apiOk = ok;
@@ -1273,7 +1286,7 @@ function setApiState(ok, text) {
   $('#apiStatus').textContent = text || (ok ? 'Flashscore подключён' : ok === false ? 'Прокси не отвечает' : 'Не проверено');
 }
 async function checkApi(silent) {
-  try { const h = await api('/health', 2500); setApiState(true, `Flashscore подключён · v${h.version || '?'}`); return true; }
+  try { const h = await api('/health', 6000); setApiState(true, `Flashscore подключён · v${h.version || '?'}${h.season && h.season.stale ? ' · данные из кэша' : ''}`); return true; }
   catch (e) { setApiState(false); if (!silent) toast('Прокси Flashscore недоступен по адресу ' + S.api); return false; }
 }
 let syncing = false;
@@ -1293,10 +1306,12 @@ async function syncAll(manual) {
     const extra = LS.get('rplArena.det', {});
     await Promise.all(missing.map(async m => { try { const d = await api('/api/match/' + m.id, 30000); if (d && d.ev && (d.ev.length || d.st.length)) { S.details[m.id] = d; extra[m.id] = d; } } catch (e) {} }));
     LS.set('rplArena.det', extra);
-    S.updated = new Date().toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    const stale = !!(season.meta && season.meta.stale);
+    S.updated = new Date((season.meta && season.meta.fetchedAt) || Date.now()).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
     LS.set('rplArena.sync', { v: 6, updated: S.updated, matches: S.matches.map(({ id, r, d, t, h, a, hg, ag, live }) => ({ id, r, d, t, h, a, hg, ag, live })), players: S.players.map(({ id, n, t, p, no, nat, age, dob, val, ct, img, lg, tot }) => ({ id, n, t, p, no, nat, age, dob, val, ct, img, lg, tot })) });
     derive(); render(true); updateFooter();
-    if (manual) toast(`Обновлено: ${nm} матчей${added ? `, новых игроков: ${added}` : ''}${missing.length ? `, загружено протоколов: ${missing.length}` : ''}`);
+    if (manual && stale) toast('Flashscore сейчас не отвечает — показаны последние сохранённые данные', 5000);
+    else if (manual) toast(`Обновлено: ${nm} матчей${added ? `, новых игроков: ${added}` : ''}${missing.length ? `, загружено протоколов: ${missing.length}` : ''}`);
     scheduleLive();
   } catch (e) { console.warn(e); if (manual) toast('Ошибка обновления: ' + e.message); }
   finally { syncing = false; btn.classList.remove('spin'); }
@@ -1322,6 +1337,10 @@ function openApiModal() {
 }
 window.addEventListener('keydown', e => { if (e.key === 'Escape') $('#apiModal').classList.remove('open'); });
 function setupApi() {
+  if (HOSTED) { // на размещённом сайте пользователю нечего настраивать: данные приходят с самого сервера
+    const m = $('#apiModal .modal'); m.querySelectorAll('pre, .row').forEach(el => el.style.display = 'none');
+    m.querySelectorAll('p.muted').forEach((el, i) => { el.textContent = i === 0 ? 'Данные берутся у Flashscore сервером приложения и обновляются автоматически.' : ''; });
+  }
   $('#apiBtn').onclick = openApiModal;
   $('#apiClose').onclick = () => $('#apiModal').classList.remove('open');
   $('#apiModal').onclick = e => { if (e.target.id === 'apiModal') $('#apiModal').classList.remove('open'); };
